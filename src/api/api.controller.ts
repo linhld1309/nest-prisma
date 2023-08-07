@@ -10,7 +10,7 @@ export class ApiController {
     const { content, userId } = data;
     return this.tweetsService.createTweet({
       content,
-      userId: Number(userId),
+      userId: String(userId),
     });
   }
 

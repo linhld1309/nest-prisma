@@ -11,18 +11,112 @@ datasource db {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  username    String
+  id          String    @id @default(cuid())
   tweets      Tweet[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  fullName    String?
+  username    String    @unique
+  email       String?   @unique
+  password    String?
+  bio         String?
+  gender      String?
+  avatar      String?
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+  token       String?   @unique
+  website     String?
+  profile     Profile?
+  phoneNumber String?
+  comments  Comment[]
+  likes     Like[]
+  messages  Message[]
+  photos    Photo[]
+  chatrooms ChatRoom[]
+  followers User[]     @relation("UserFollows")
+  following User[]     @relation("UserFollows")
 }
-
 model Tweet {
-  id           Int      @id @default(autoincrement())
-  user        User      @relation(fields: [userId], references: [id])
-  userId      Int
+  id          Int      @id @default(autoincrement())
   content     String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  userId      String    @unique
+  User        User      @relation(fields: [userId], references: [id])
+}
+
+model Profile {
+  id       Int       @id @default(autoincrement())
+  socialId String?
+  authType AuthType?
+  userId   String    @unique
+  User     User      @relation(fields: [userId], references: [id])
+}
+
+model Photo {
+  id        Int       @id @default(autoincrement())
+  caption   String?
+  file      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  comments  Comment[]
+  likes     Like[]
+  hashtags  HashTag[]
+}
+
+model HashTag {
+  id        Int      @id @default(autoincrement())
+  hashtag   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  photos    Photo[]
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  photoId   Int
+  photo     Photo    @relation(fields: [photoId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([photoId, userId], name: "uniquelike")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  text      String
+  photoId   Int
+  photo     Photo    @relation(fields: [photoId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model ChatRoom {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  messages  Message[]
+  users     User[]
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  text       String
+  chatRoomId Int
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+enum AuthType {
+  google
+  email
+  facebook
 }

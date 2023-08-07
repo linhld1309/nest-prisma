@@ -28,7 +28,7 @@ describe(`TweetsRepository`, () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         content: `Hello world, this is a tweets.`,
-        userId: 1234,
+        userId: '1234',
       };
       prismaService.tweet.create.mockResolvedValue(mockedTweet);
 
@@ -37,7 +37,7 @@ describe(`TweetsRepository`, () => {
         tweetsRepository.createTweet({
           data: {
             content: mockedTweet.content,
-            user: {
+            User: {
               connect: {
                 id: mockedTweet.userId,
               },
@@ -53,7 +53,7 @@ describe(`TweetsRepository`, () => {
       // Arrange
       const payload = {
         content: `This is a super long tweet over 80 characters`,
-        userId: 1234,
+        userId: '1234',
       };
 
       // Act
@@ -61,7 +61,7 @@ describe(`TweetsRepository`, () => {
         tweetsRepository.createTweet({
           data: {
             content: payload.content,
-            user: {
+            User: {
               connect: {
                 id: payload.userId,
               },

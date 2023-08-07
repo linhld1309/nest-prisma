@@ -1,4 +1,4 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Tweet } from 'src/modules/tweets/tweets.model';
 import { TweetsService } from 'src/modules/tweets/tweets.service';
 
@@ -14,7 +14,7 @@ export class ApiResolver {
   @Mutation(() => Tweet)
   async createTweet(
     @Args({ name: `content`, type: () => String }) content: string,
-    @Args({ name: `userId`, type: () => Int }) userId: number,
+    @Args({ name: `userId`, type: () => String }) userId: string,
   ) {
     return this.tweetsService.createTweet({ content, userId });
   }

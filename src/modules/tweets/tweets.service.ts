@@ -13,7 +13,7 @@ export class TweetsService {
     const tweet = await this.repository.createTweet({
       data: {
         content,
-        user: {
+        User: {
           connect: {
             id: userId,
           },
